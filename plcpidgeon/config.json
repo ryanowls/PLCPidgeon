@@ -1,1 +1,1 @@
-{"ip": "10.0.0.30", "filename": "", "storage": "csv", "tags": [], "trigger": {"time": 10, "requirements": null}}
+{"ip": "", "filename": "", "storage": "csv", "tags": [], "trigger": {"time": null, "requirements": null}}

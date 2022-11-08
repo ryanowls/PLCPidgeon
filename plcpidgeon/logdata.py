@@ -8,12 +8,15 @@ def logtask():
     with open("config.json", "r") as jsonfile:
         data = json.load(jsonfile) # Reading the file
         jsonfile.close()
-    try:
-        while True:
-            log()
-            time.sleep(data['trigger']['time'])
-    except KeyboardInterrupt:
-        print("Exited Successfully")
+    if data["ip"] == "" or not data["tags"] or not data["triggers"]["time"]:
+        print("Before you can fly, you must run ... the setup under the pidgeon command.")
+    else:            
+        try:
+            while True:
+                log()
+                time.sleep(data['trigger']['time'])
+        except KeyboardInterrupt:
+            print("Exited Successfully")
 
 def log():
     dt = datetime.datetime.now()
