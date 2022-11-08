@@ -27,9 +27,11 @@ def log():
         if trigger_type["requirements"] == None:
             file_path = data["filename"]
             if file_path == "":
-                file_path = f"{dt.month}-{dt.day}"
-            with open(file_path + ".csv", "a") as csvfile:
-                file_is_empty = os.stat(file_path + ".csv").st_size  == 0
+                file_path = f"../logs/{dt.month}-{dt.day}.csv"
+            else:
+                file_path = f"../logs/{file_path}.csv"
+            with open(file_path, "a") as csvfile:
+                file_is_empty = os.stat(file_path).st_size  == 0
                 csvwriter = csv.DictWriter(csvfile, fieldnames = headers, lineterminator='\n')
                 if file_is_empty:
                     csvwriter.writeheader()
@@ -48,8 +50,10 @@ def log():
             if requirements_met:
                 file_path = data["filename"]
                 if file_path == "":
-                    file_path = f"{dt.month}-{dt.day}"
-                with open(file_path + ".csv", "a") as csvfile:
+                    file_path = f"../logs/{dt.month}-{dt.day}.csv"
+                else:
+                    file_path = f"../logs/{file_path}.csv"
+                with open(file_path, "a") as csvfile:
                     file_is_empty = os.stat(file_path).st_size  == 0
                     csvwriter = csv.DictWriter(csvfile, fieldnames = headers, lineterminator='\n')
                     if file_is_empty:

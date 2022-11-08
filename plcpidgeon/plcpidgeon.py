@@ -1,7 +1,7 @@
 import sqlite3
 import pylogix
 import typer
-from typing import Tuple, List, Optional
+from typing import Tuple, List, Optional    
 import json
 from rich import print, print_json
 import os
@@ -9,13 +9,12 @@ import os
 app = typer.Typer()
 
 @app.command()
-def setip(ip : str):
+def setipaddress(ip : str):
     """
     Set the IP Address of the PLC to be connected to.
     """
     with open("config.json", "r") as jsonfile:
         data = json.load(jsonfile) # Reading the file
-        print("Read successful")
         jsonfile.close()
     data["ip"] = ip
     with open("config.json", "w") as jsonfile:
@@ -154,5 +153,27 @@ def clearValueReqs():
 def clearConfig():
     clearValueReqs()
     cleartags()
+
+@app.command()
+def setfilename(name : str):
+    """
+    Sets the filename. Logs are stored in the rootdirectory log folder.
+    
+    If you don't set a name, it will default to the "{month}-{date}" at the time of running.
+    """
+    with open("config.json") as f:
+        data = json.load(f)
+        f.close()
+    data["filename"] = name
+    with open("config.json", "w") as f:
+        json.dump(data, f)
+        f.close()
+        print(":sparkles:[green] Filename set. [/green] :sparkles:")
+
+@app.command()
+def setup():
+    """Walks you through setup without calling individual commands."""
+    pass
+
 if __name__ == "__main__":
     app()
