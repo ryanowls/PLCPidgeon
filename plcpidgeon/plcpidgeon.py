@@ -1,9 +1,10 @@
 import sqlite3
 import pylogix
 import typer
-from typing import Tuple, List
+from typing import Tuple, List, Optional
 import json
 from rich import print, print_json
+import os
 
 app = typer.Typer()
 
@@ -106,11 +107,52 @@ def addTimerTrigger(
     with open("config.json") as f:
         data = json.load(f)
         f.close()
-    data["trigger"] = {"time" : adjusted}
+    data["trigger"] = {"time" : adjusted, "value" : None}
     with open("config.json", "w") as f:
         json.dump(data, f)
         f.close()
         print(f":sparkles:[green] Timer for {timer} succesfully added [/green] :sparkles:")
 
+@app.command()
+def addValueReqs(req : Optional[List[str]] = typer.Option(None)):
+    """
+        Allows you to add a value trigger to record data. 
+
+        For example: "temp1 <= 30"
+
+        Must be entered seperated with a --req flag.
+
+        pidgeon addvaluereqs --req "t1 <= 40" --req "pressure >= 100"
+
+        MUST ENTER QUOTES AROUND REQUIREMENTS
+    """
+    if not req:
+        print(f"[bold yellow] You didn't enter any requirements. [/bold yellow]")
+        raise typer.Abort()
+    with open("config.json") as f:
+        data = json.load(f)
+        f.close()
+    for r in req:
+        data["trigger"]["requirements"].append(r)
+    with open("config.json", "w") as f:
+        json.dump(data, f)
+        print(f":sparkles:[green] Requirements added. [/green] :sparkles:")
+
+@app.command()
+def clearValueReqs():
+    """Clears all the existing requirements"""
+    with open("config.json") as f:
+        data = json.load(f)
+        f.close()
+    data["trigger"]["requirements"] = []
+    with open("config.json", "w") as f:
+        json.dump(data, f)
+        f.close()
+        print(":sparkles:[green] Requirements Succesfully cleared [/green] :sparkles:")
+
+@app.command()
+def clearConfig():
+    clearValueReqs()
+    cleartags()
 if __name__ == "__main__":
     app()
